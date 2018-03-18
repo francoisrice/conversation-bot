@@ -4,7 +4,7 @@ This is an ongoing project to implement an amalgam of the leading conversational
 
 ---
 
-###Todo
+### Todo
 - Code the bot to create daily, weekly, monthly, quarterly, and yearly backups
 - Create the web interface for the bot
 - Create and auto-update a knowledge base/persona 
@@ -13,7 +13,7 @@ This is an ongoing project to implement an amalgam of the leading conversational
 
 ---
 
-###Additional Features
+### Additional Features
 - Log all input queries into a dataset for future bots
 - Connect bot to in-house and 3rd party applications 
 - Voice recognition
