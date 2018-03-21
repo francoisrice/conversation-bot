@@ -5,7 +5,7 @@ This is an ongoing project to implement an amalgam of the leading conversational
 ---
 
 ### Todo
-- Implement Keras' Seq2Seq example as the baseline for the bot
+- Implement Keras' Seq2Seq example as the baseline for the bot (FYI bot doesn't work in its current form)
 
 ### Basic Features (In progress)
 - Create base algorithm for text generation
