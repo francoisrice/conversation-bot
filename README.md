@@ -5,6 +5,10 @@ This is an ongoing project to implement an amalgam of the leading conversational
 ---
 
 ### Todo
+- Implement Keras' Seq2Seq example as the baseline for the bot
+
+### Basic Features (In progress)
+- Create base algorithm for text generation
 - Code the bot to create daily, weekly, monthly, quarterly, and yearly backups
 - Create the web interface for the bot
 - Create and auto-update a knowledge base/persona 
