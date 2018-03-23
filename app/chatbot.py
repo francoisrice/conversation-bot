@@ -100,7 +100,9 @@ class SeqtoSeq(object):
 		self.num_samples = num_samples
 		
 	def create(self):
-
+		
+		enoder_input_data = np.zeros()
+		
 		return True
 
 	def train(self,sample,target):
@@ -110,8 +112,21 @@ class SeqtoSeq(object):
 		target = target.split(' ')
 		sample = sorted(list(sample))
 		target = sorted(list(target))
-
-		#TODO - continue implementing Seq2Seq example, have read to line 84
+		num_encoder_tokens = len(sample)
+		num_decoder_tokens = len(target)
+		
+		# The max encoder length should be set based on multiple samples, 
+		#however this function is designed to take in a single input. Thus
+		#the following lines are commented out.
+		#max_encoder_seq_length = max([len(txt) for txt in sample_texts])
+		#max_decoder_seq_length = max([len(txt) for txt in target_texts])
+		
+		sample_token_index = dict([(char, i) for i, char in enumerate(sample)])
+		target_token_index = dict([(char, i) for i, char in enumerate(target)])
+		
+		
+		#TODO - Put lines 103 to 111 in the create() function
+		#TODO - continue implementing Seq2Seq example, have read to line 113
 
 		return True
 	
