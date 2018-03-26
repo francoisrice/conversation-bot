@@ -6,23 +6,27 @@
 from keras.models import Sequential # basic Keras model
 from keras.layers import Dense, Activation # Necessary functions for NN layers and computation
 
-class NLPv1(object):
-	def __init__(self,name):
+class ANN(object):
+	def __init__(self,name,inlayer,hidden,outlayer):
 		self.name = name
+		self.inlayer = int(inlayer)
+		self.hidden =  int(hidden)
+		self.outlayer = int(outlayer)
 
-	def create(self, name):
+
+	def create(self,name=self.name,inlayer=self.inlayer,hidden=self.hidden,outlayer=self.outlayer):
 		self.name = str(name)
 		model = Sequential([
 
 			# creates a hiidden layer with 12 nodes and an input layer
 			# with 20 nodes
-		   Dense(12, input_shape=(20,)), 
+		   Dense(hidden, input_shape=(inlayer,)), 
 		  #Dense(12, input_dim=20), # same as above
 
 		  # Set softmax as the normalizing function for hidden layer outputs
 		   Activation('softmax'),
 
-		   Dense(5), # create a 5 node output layer
+		   Dense(outlayer), # create a 5 node output layer
 		   Activation('softmax'), # Give the output layer a softmax function too
 		])
 
@@ -56,13 +60,13 @@ class NLPv1(object):
 			raise('Unknown error risen while saving weights. Perhaps try again.')
 		return model
 
-	def load(self,name):
+	def load(self,name,inlayer,hidden,outlayer):
 		name= str(name)
 		model = Sequential([
-		   Dense(12, input_shape=(20,)),
+		   Dense(hidden, input_shape=(inlayer,)),
 		  #Dense(12, input_dim=20), # same as above
 		   Activation('softmax'),
-		   Dense(5),
+		   Dense(outlayer),
 		   Activation('softmax'),
 		])
 
