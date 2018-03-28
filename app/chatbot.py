@@ -102,17 +102,50 @@ class SeqtoSeq(object):
 		self.epochs = epochs
 		self.latent_dim = latent_dim
 		self.num_samples = num_samples
-		self.max_encoder_seq_length =
-		self.max_decoder_seq_length = 
 		
-	def create(self):
+		#These variables may not be necessary
+		#self.max_encoder_seq_length =
+		#self.max_decoder_seq_length = 
+		
+	def create(self,sample,target):
+
+		#I have no idea if these line actually define the 
+		# creation of the model, or if they should go 
+		# into another function, so that is left to the 
+		# user :D
+
+		#Setup variables
+
+		#This will likely have to be the maximum vocabulary of the model
+		# since it is the number of tokens. It is assumed that "tokens"
+		# for the original script means unique characters, which in this
+		# scripts case would be unique words.
+		num_encoder_tokens = len(sample)
 
 		#Define the input sequence and process it
 		encoder_inputs = Input(shape=(None, num_encoder_tokens))
+		encoder = LSTM(self.latent_dim, return_state=True)
+		encoder_outputs, state_h, state_c = encoder(encoder_inputs)
+		# The LSTM encoder outputs are not needed, but the states are kept
+		encoder_states = [state_h, state_c]
 
-		return True
+		# Pass the encoder states to the decoder 
+		decoder_inputs = Input(shape=(None, num_decoder_tokens))
+		# The decoder will return output sequences and internal states
+		#but not return states. The return states will be used in 
+		#inference, not in the training of the model
+		decoder = LSTM(latent_dim, return_sequences=True, return_state=True)
+		decoder_outputs, _, _ = decoder(decoder_inputs, 
+			initial_state=encoder_states)
+		decoder_dense = Dense(num_decoder_tokens, activation='softmax')
+		decoder_outputs = decoder_dense(decoder_outputs)
 
-	def train(self,sample,target):
+		# Define the model
+		model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
+
+		return model
+
+	def train(self,sample,target,model):
 
 		#NOTE: Since only one sample is passed in at a time, but there will
 		# be several samples used to train, there must be a dictionary of 
@@ -146,11 +179,13 @@ class SeqtoSeq(object):
 				# decoder_target_data is ahead by one time step
 				decoder_target_data[1, t-1, target_token_index[word]] = 1
 
-		#TODO - continue implementing Seq2Seq example, start @ line 124, put in create function
+		#TDOD - instantiate the variables in the create function for it to work properly
+		#TODO - continue implementing Seq2Seq example, start @ line 146, with the actual training
 
 		return True
 	
-	def save(self):
+	def save(self,name,model):
+		model.save(name+'.h5')
 		return True
 
 	def load(self):
