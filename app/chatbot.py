@@ -97,25 +97,56 @@ class SeqtoSeq(object):
 	this model from stratch, but then again, that would just be like rewritting keras, which isn't 
 	useful."""
 	
-	def __init__(self,batch_size=64,epochs=100,latent_dim=256,num_samples=10000): # All of this inf
+	def __init__(self,batch_size=64,epochs=100,latent_dim=256,num_samples=10000,max_encoder_seq_length=,max_decoder_seq_length): # All of this inf
 		self.batch_size = batch_size
 		self.epochs = epochs
 		self.latent_dim = latent_dim
 		self.num_samples = num_samples
+		self.max_encoder_seq_length =
+		self.max_decoder_seq_length = 
 		
 	def create(self):
+
+		#Define the input sequence and process it
+		encoder_inputs = Input(shape=(None, num_encoder_tokens))
 
 		return True
 
 	def train(self,sample,target):
+
+		#NOTE: Since only one sample is passed in at a time, but there will
+		# be several samples used to train, there must be a dictionary of 
+		# previously learned tokens passed into the training function. 
 
 		# Vectorize the data
 		sample = sample.split(' ')
 		target = target.split(' ')
 		sample = sorted(list(sample))
 		target = sorted(list(target))
+		num_encoder_tokens = len(sample)
+		num_decoder_tokens = len(target)
+		encoder_seq_length = 
+		decoder_input_data = 
 
-		#TODO - continue implementing Seq2Seq example, have read to line 84
+		input_token_index = dict([(word, i) for i, word in enumerate(sample)])
+		target_token_index = dict([(word, i) for i, word in enumerate(target)])
+
+		encoder_input_data = np.zeros((1, encoder_seq_length, num_encoder_tokens),
+			dtype='float32')
+		decoder_input_data = np.zeros((1, decoder_seq_length, num_decoder_tokens),
+			dtype='float32')
+		decoder_target_data = np.zeros((1, decoder_seq_length, num_decoder_tokens),
+			dtype='float32')
+
+		for t, word in enumerate(sample):
+			encoder_input_data[1, t, input_token_index[word]] = 1
+		for t, word in enumerate(target):
+			decoder_input_data[1, t, target_token_index[word]] = 1
+			if t > 0:
+				# decoder_target_data is ahead by one time step
+				decoder_target_data[1, t-1, target_token_index[word]] = 1
+
+		#TODO - continue implementing Seq2Seq example, start @ line 124, put in create function
 
 		return True
 	
