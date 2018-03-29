@@ -97,7 +97,8 @@ class SeqtoSeq(object):
 	this model from stratch, but then again, that would just be like rewritting keras, which isn't 
 	useful."""
 	
-	def __init__(self,batch_size=64,epochs=100,latent_dim=256,num_samples=10000,max_encoder_seq_length=,max_decoder_seq_length): # All of this inf
+	def __init__(self,name,batch_size=64,epochs=100,latent_dim=256,num_samples=10000,max_encoder_seq_length=,max_decoder_seq_length): # All of this inf
+		self.name = name
 		self.batch_size = batch_size
 		self.epochs = epochs
 		self.latent_dim = latent_dim
@@ -113,6 +114,8 @@ class SeqtoSeq(object):
 		# creation of the model, or if they should go 
 		# into another function, so that is left to the 
 		# user :D
+
+		#TDOD - instantiate the variables in the create function for it to work properly
 
 		#Setup variables
 
@@ -179,12 +182,49 @@ class SeqtoSeq(object):
 				# decoder_target_data is ahead by one time step
 				decoder_target_data[1, t-1, target_token_index[word]] = 1
 
-		#TDOD - instantiate the variables in the create function for it to work properly
-		#TODO - continue implementing Seq2Seq example, start @ line 146, with the actual training
+		# Begin the actual training
+		model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
+		model.fit([encoder_input_data, decoder_input_data], decoder_target_data,
+			batch_size= self.batch_size,
+			epochs= self.epochs,
+			validation_split=0.2)
 
-		return True
+		#TODO - figure out where this code block should go
+		# I think the following are necessary for training but I'm not sure
+		
+		#This is the general idea:
+		# 1. encode input and retrieve initial decoder state
+		# 2. run one step of decoder with this initial state and a "start
+		#of sequence" token as target, and get the next target token
+		# 3. Repeat with the next token and states
+
+
+		# Define sampling models
+		encoder_model = Moel(encoder_inputs, encoder_states)
+
+		decoder_state_input_h = Input(shape=(latent_dim,))	
+		decoder_state_input_c = Input(shape=(latent_dim,))
+		decoder_states_inputs = [decoder_state_input_h, decoder_state_input_c]
+		
+		# THe decoder LSTM may need to be passed from creation
+		decoder_outputs, state_h state_c = decoder(decoder_inputs, 
+			initial_state=decoder_states_inputs)
+		decoder_states = [state_h, state_c]
+
+		# The decoder_dense layer may need to be passed from creation
+		decoder_outputs = decoder_dense(decoder_outputs)
+		decoder_model = Model([decoder_inputs] + decoder_states_inputs,
+			[decoder_outputs] + decoder_states)
+
+		# Look through the index in reverse to generate new sequence
+		reverse_sample_index = dict((i, word) for word, i in sample_token_index.items())
+		reverse_target_index = dict((i, word) for word, i in target_token_index.items())
+
+		#TODO - continue implementing Seq2Seq example, start @ line 185
+
+		return model
 	
-	def save(self,name,model):
+	def save(self,name=self.name,model):
 		model.save(name+'.h5')
 		return True
 
