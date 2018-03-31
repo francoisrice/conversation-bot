@@ -8,6 +8,7 @@ This is an ongoing project to implement an amalgam of the leading conversational
 ### Todo
 - Give the variable in the Seq2Seq model consistent names and test each function
  (FYI bot doesn't work in its current form)
+- Implement the lstm_seq2seq_restore.py file
 
 ### Basic Features (In progress)
 - Create base algorithm for text generation 
