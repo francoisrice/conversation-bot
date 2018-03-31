@@ -1,14 +1,16 @@
 ## Conversation Bot: a super chatbot!
+### Version: 0.0.0.5
 
 This is an ongoing project to implement an amalgam of the leading conversational neural network algorithms and architectures. 
 
 ---
 
 ### Todo
-- Implement Keras' Seq2Seq example as the baseline for the bot (FYI bot doesn't work in its current form)
+- Give the variable in the Seq2Seq model consistent names and test each function
+ (FYI bot doesn't work in its current form)
 
 ### Basic Features (In progress)
-- Create base algorithm for text generation
+- Create base algorithm for text generation 
 - Code the bot to create daily, weekly, monthly, quarterly, and yearly backups
 - Create the web interface for the bot
 - Create and auto-update a knowledge base/persona 
