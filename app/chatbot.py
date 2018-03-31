@@ -189,8 +189,19 @@ class SeqtoSeq(object):
 			epochs= self.epochs,
 			validation_split=0.2)
 
-		#TODO - figure out where this code block should go
-		# I think the following are necessary for training but I'm not sure
+		return model
+	
+	def save(self,name=self.name,model):
+		model.save(name+'.h5')
+		return True
+
+	def load(self):
+		return True
+
+	def query(self,sample):
+
+		# I think the following are for query but I'm not sure; querying is 
+		#sampling right?
 		
 		#This is the general idea:
 		# 1. encode input and retrieve initial decoder state
@@ -200,7 +211,7 @@ class SeqtoSeq(object):
 
 
 		# Define sampling models
-		encoder_model = Moel(encoder_inputs, encoder_states)
+		encoder_model = Model(encoder_inputs, encoder_states)
 
 		decoder_state_input_h = Input(shape=(latent_dim,))	
 		decoder_state_input_c = Input(shape=(latent_dim,))
@@ -222,14 +233,72 @@ class SeqtoSeq(object):
 
 		#TODO - continue implementing Seq2Seq example, start @ line 185
 
-		return model
-	
-	def save(self,name=self.name,model):
-		model.save(name+'.h5')
-		return True
+		def decode_sequence(input_seq,encoder_mode=encoder_model,
+			decoder_model=decoder_model):
 
-	def load(self):
-		return True
+			# Encode the input as a state vector
+			states_value = encoder_model.predict(input_seq)
 
-	def query(self):
+			# Generate empty target sequence of length 1
+			target_seq = np.zeros((1,1, num_decoder_tokens))
+
+			#Samples and target data are not seperated by tabs for this script, so the 
+			#  following line does not apply. But what is its equivalent? -> Likely 
+			#  this will just be ignored and the script will need some custom mods
+				# Populate the first character of target sequence with the start character
+			target_seq[0,0, target_token_index['\t']] = 1
+
+			
+			# Sampling loop for a batch of sequences with a batch size of 1
+			stop_condition = False
+			decoded_sentence = ''
+			while not stop_condition:
+				output_tokens, h, c = decoder_model.predict([target_seq] + states_value)
+
+				# Sample the tokens
+				sampled_token_index = np.argmax(output_tokens[0, -1, :])
+				sampled_word = reverse_target_index[sampled_token_index]
+				decoded_sentence += " " + sampled_word + " "
+
+				# Exit Condition:
+				#Just like with the "tab" denoting the break between samples and target
+				#  data, there will need to be a custom way thought up for exiting. 
+				#  Likely after a ., !, or ?; or perhaps an "EOL" word could be used.
+
+				# Update the target sequence
+				target_seq = np.zeros((1, 1, num_decoder_tokens))
+				target_seq[0, 0, sampled_token_index] = 1
+
+				# Update states
+				states_value = [h, c]
+
+			return decoded_sentence
+
+		#TODO - see if this Seq2Seq model is able to generate responses for sequences
+		#  that it is not trained on. It should be able to, for sure, but it should 
+		#  still be varified. 
+
+		#TODO - move this if to the start of the query function
+		#TODO - create a sample_list and a target_list in the train function and 
+		#  pass in.
+		if sample in sample_list:
+			seq_index = sample_list.index(sample)
+			input_seq = encoder_input_data[seq_index:seq_index+1]
+			decoded_sentence = decode_sequence(input_seq)
+
+		else:
+			#Synth response: "I'm sorry, but I do not understand."
+			#Perhaps even follow up, by asking what the unfamiliar
+			#  word/token means
+
+		return decoded_sentence
+
+	def decode(self):
+
+		def decode_sequence(input_seq):
+
+			#Encode the input as a state vector
+			states_value = encoder_model.predict(input_seq)
+			pass
+
 		return True
