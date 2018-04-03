@@ -16,6 +16,7 @@ This is an ongoing project to implement an amalgam of the leading conversational
 - Create the web interface for the bot
 - Create and auto-update a knowledge base/persona 
 - Code Scheduled functions for the bot to run for webscrapping and information gathering
+- Create process or algorithm for bot to speak more coherently, by speaking to itself/having generated words critiqued
 - Launch the software on a live server
 
 ---
